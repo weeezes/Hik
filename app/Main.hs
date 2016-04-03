@@ -41,7 +41,7 @@ main =
             
             conn <- openConnection s u c
 
-            startBot conn [ircPingPong, ircQuit, ircEcho] ""
+            startBot conn [pingPong, quit, echo] ""
             
             putStrLn "Killing bot..."
           _ -> print "Couldn\'t parse configurations."
