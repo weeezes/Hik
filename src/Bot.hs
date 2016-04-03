@@ -6,12 +6,11 @@ module Bot
     ) where
 
 import Network.Socket
-import Data.String
-import Control.Monad
-import qualified Data.Maybe as MB
+import Data.Maybe (mapMaybe)
 import qualified Data.Text as T
-import Actions
 import qualified Types as IT
+
+import Actions
 
 openConnection :: IT.Server -> IT.User -> IT.Channel -> IO IT.Connection
 openConnection server user channel =
@@ -19,7 +18,7 @@ openConnection server user channel =
       let address = IT.address server
       let port = show . IT.port $ server
         
-      sock <- openlog address port
+      sock <- initSocket address port
         
       send sock $ "NICK " ++ IT.nick user ++ "\r\n"
       send sock $ "USER " ++ IT.nick user ++ " " ++ address ++ " arb: " ++ IT.realName user ++ "\r\n"
@@ -31,7 +30,7 @@ handleMessage :: IT.Connection -> [IT.IRCAction] -> T.Text -> IO ()
 handleMessage connection actions message =
     do
         let channel = IT.connectionChannel connection
-        let handled = T.unpack <$> MB.mapMaybe (\a -> a channel message) actions
+        let handled = T.unpack <$> mapMaybe (\a -> a channel message) actions
         let sock = IT.socket connection
         
         mapM_ (send sock) handled
@@ -53,7 +52,7 @@ startBot connection actions buffer =
         
         startBot connection actions new_buffer
 
-openlog hostname port =
+initSocket hostname port =
     do 
       addrinfos <- getAddrInfo Nothing (Just hostname) (Just port)
       let serveraddr = head addrinfos
