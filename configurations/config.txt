@@ -1,0 +1,14 @@
+# irc server to connect to
+server:
+
+# irc server port to connect to
+port:
+
+# nick of the bot
+botnick:
+
+# real name for the bot
+botname:
+
+# channel to connect to
+botchannel:
