@@ -2,8 +2,7 @@
 
 module Bot
     ( openConnection,
-      strStartsWith,
-      startBot,
+      startBot
     ) where
 
 import Network.Socket
@@ -13,11 +12,6 @@ import qualified Data.Maybe as MB
 import qualified Data.Text as T
 import Actions
 import qualified Types as IT
-
-strStartsWith :: String -> String -> Bool
-strStartsWith (a:start) (b:string) = (a == b) && strStartsWith start string 
-strStartsWith [] _ = True
-strStartsWith _ [] = False
 
 openConnection :: IT.Server -> IT.User -> IT.Channel -> IO IT.Connection
 openConnection server user channel =
